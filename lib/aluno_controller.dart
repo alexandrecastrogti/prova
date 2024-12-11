@@ -8,26 +8,19 @@ class AlunoController extends ControllerBase{
     return await post("Inserir", aluno.toJson());
   }
 
-  
   Future<ResultApplication> atualizar(Aluno aluno) async{
     return await put("Atualizar", aluno.toJson());
   }
 
   Future<ResultApplication> excluir(int codigo) async{
-    return await delete("Excluir", codigo);
+    return await delete("Excluir($codigo)");
   }
-
-
+  
   Future<ResultApplication> buscar(int codigo) async{
-    Map<String, String> parametros = {"codigo" : codigo.toString()};
-    return await get("buscar", parametros);
+    //Map<String, String> parametros = {"codigo" : codigo.toString()};
+    return await get("Buscar($codigo)");
   }
-
-  Future<ResultApplication> buscarTodos(int codigo) async{
-    Map<String, String> parametros = {};
-    return await get("BuscarTodos", parametros);
-  }
-
+  
   
 
 

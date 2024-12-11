@@ -25,74 +25,57 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
+  
+  //Objetos que capturam os textos de cada caixa de texto
   var codigoTextController = TextEditingController();
   var nomeTextController = TextEditingController();
 
+  //Declarando o Controlador para consumir a API
   var alunoController = AlunoController();
   var aluno = Aluno();
 
-  void confirmar(){
-
-  }
-
-
-
-
-
-
-
-  @override
+  @override  
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: () => _incluir(), icon: const Icon(Icons.add)),
-          IconButton(onPressed: () => _excluir(), icon: const Icon(Icons.delete)),
-          IconButton(onPressed: () => _atualizar(), icon: const Icon(Icons.update)),
+            IconButton(onPressed: () => _incluir(), icon: const Icon(Icons.add)),
+            IconButton(onPressed: () => _excluir(), icon: const Icon(Icons.delete)),
+            IconButton(onPressed: () => _atualizar(), icon: const Icon(Icons.update)),
+            IconButton(onPressed: () => _buscar(), icon: const Icon(Icons.search))
         ],
-
         title: const Text('Revisão Prova'),
       ),
       body: _createBody(context),
     );
-      
-    
   }
   
   Widget _createBody(BuildContext context) {
-    return Padding
-    (
-      padding: const EdgeInsets.all(8),
-      child: Form
-      (
-      child: Column(
+    return Padding(padding: const EdgeInsets.all(8),
+      child: Form(child: Column(
               children: [
-                HelperWidgets.createTextForm("Código", "", codigoTextController),
-                HelperWidgets.createTextForm("Nome", "", nomeTextController),
-
+                  HelperWidgets.createTextForm("Código", "", codigoTextController),
+                  HelperWidgets.createTextForm("Nome", "", nomeTextController),
               ],
-            ),
-          ),
+        ),      
+      ),    
     );
   }
   
-  void _incluir()async{
-
-    _defineDados();    
+  void _incluir() async{
+    _defineDados();
     ResultApplication result = await alunoController.inserir(aluno);
     await _exibeMensagem(result);
-    
-
 
   }
 
   Future<void> _exibeMensagem(ResultApplication result) async {
-     if (result.success!){
-      await HelperWidgets.showMessageDialog(result.message!, context);
+    if (result.success!){
+        await HelperWidgets.showMessageDialog(result.message!, context);
     }
     else{
-      var mensagem = "${result.message} \n ${result.error}";
-      await HelperWidgets.showMessageDialog(mensagem, context);
+        var mensagem = "${result.message} \n ${result.error}";
+        await HelperWidgets.showMessageDialog(mensagem, context);
     }
   }
 
@@ -100,20 +83,38 @@ class _MainState extends State<Main> {
     aluno.codigo = int.tryParse(codigoTextController.text);
     aluno.nome = nomeTextController.text;
   }
-  void _excluir()async{
-    _defineDados();    
-     ResultApplication result = await alunoController.excluir(aluno.codigo!);
-     await _exibeMensagem(result);
-     
-    
+  
+  void _excluir() async{    
+    _defineDados();
+    ResultApplication result = await alunoController.excluir(aluno.codigo!);
+    await _exibeMensagem(result);
+    if (result.success!){
+      codigoTextController.text = "";
+      nomeTextController.text = "";
 
+    }
   }
-  void _atualizar()async{
-    _defineDados();    
+
+  void _atualizar() async{   
+    _defineDados();
     ResultApplication result = await alunoController.atualizar(aluno);
     await _exibeMensagem(result);
-
   }
+  
+  void _buscar() async{
+    if (codigoTextController.text.isEmpty){
+        HelperWidgets.showMessageDialog("Preencha o campo código", context);
+        return;
+    }
+    _defineDados();
+    ResultApplication result = await alunoController.buscar(aluno.codigo!);
+    await _exibeMensagem(result);
+    if (result.success!){
+      codigoTextController.text = result.aluno!.codigo.toString();
+      nomeTextController.text = result.aluno!.nome!;
+    }
+  }
+  
 
 }
 

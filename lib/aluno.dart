@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 class Aluno {
+
   int? codigo;
   String? nome;
   Aluno({

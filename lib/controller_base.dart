@@ -1,7 +1,5 @@
-
-import 'package:flutter_revisao_prova/result_application.dart';
-
 import 'dart:convert' as convert;
+import 'package:flutter_revisao_prova/result_application.dart';
 import 'package:http/http.dart' as http;
 
 enum HttpMethods{
@@ -30,8 +28,9 @@ class ControllerBase{
         //Definindo a URL para realizar a requisição da WebAPI
         if (httpMethod == HttpMethods.GET)
             url = Uri.http(url_base, "api/Aluno/${method}", parameters);
-        else
+        else          
             url = Uri.http(url_base, "api/Aluno/${method}");
+
 
         var result;
 
@@ -47,7 +46,7 @@ class ControllerBase{
                 result = await http.put(url, body: bodyJson, headers: header);
             break;
             case HttpMethods.DELETE:
-                result = await http.delete(url, headers: header, body: body);
+                result = await http.delete(url, headers: header);
             break;
         }
         
@@ -83,7 +82,7 @@ class ControllerBase{
       return await httpMethod(method, HttpMethods.POST, bodyJson: bodyJson);
   }   
 
-  Future<ResultApplication> delete(String method, Object body) async{
+  Future<ResultApplication> delete(String method, {Object? body}) async{
     return await httpMethod(method, HttpMethods.DELETE, body: body);
   }
 
@@ -91,7 +90,7 @@ class ControllerBase{
     return await httpMethod(method, HttpMethods.PUT, bodyJson: bodyJson);
   }
 
-  Future<ResultApplication> get(String method, Map<String, String> parameters) async{
+  Future<ResultApplication> get(String method, {Map<String, String>? parameters}) async{
     return await httpMethod(method, HttpMethods.GET, parameters: parameters);
   }
 

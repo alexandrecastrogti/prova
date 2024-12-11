@@ -7,10 +7,9 @@ class ResultApplication {
 
   bool? success;
   String? message;
-  String? error;
+  String? error;  
   List? dados;
   Aluno? aluno;
-
   ResultApplication({
     this.success,
     this.message,
@@ -18,7 +17,8 @@ class ResultApplication {
     this.dados,
     this.aluno,
   });
-
+  
+ 
 
   ResultApplication copyWith({
     bool? success,
@@ -52,7 +52,7 @@ class ResultApplication {
       message: map['message'] != null ? map['message'] as String : null,
       error: map['error'] != null ? map['error'] as String : null,
       dados: map['dados'] != null ? map['dados'] as List: null,
-      aluno: map['aluno'] != null ? Aluno.fromJson(map['aluno']): null,
+      aluno: map['aluno'] != null ? Aluno.fromMap(map['aluno']) : null,
     );
   }
 
@@ -85,5 +85,4 @@ class ResultApplication {
       dados.hashCode ^
       aluno.hashCode;
   }
-  
 }
